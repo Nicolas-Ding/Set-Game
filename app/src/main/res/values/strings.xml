@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Set Game</string>
+
+    <string name="Button_Solo">One player</string>
+    <string name="Button_Multi">Multi Player</string>
+    <string name="Button_Scores">Scores</string>
+
+    <string name="title_activity_single_player">Single player</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="score">Score :</string>
+
+</resources>

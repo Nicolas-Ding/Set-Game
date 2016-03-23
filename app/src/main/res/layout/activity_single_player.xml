@@ -1,0 +1,149 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#52c5ec"
+    tools:context="inf431.polytechnique.fr.setgame.SinglePlayerActivity">
+
+    <!-- The primary full-screen view. This can be replaced with whatever view
+         is needed to present your content, e.g. VideoView, SurfaceView,
+         TextureView, etc. -->
+
+    <!-- This FrameLayout insets its children based on system windows using
+         android:fitsSystemWindows. -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/topLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+            <!--
+                        <inf431.polytechnique.fr.setgame.myImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:id="@+id/imageView"
+                            android:layout_weight="1"
+                            android:layout_margin="5dp"
+                            android:background="@drawable/round_card"
+                            android:clickable="true"
+            />
+
+                        <inf431.polytechnique.fr.setgame.myImageView
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:id="@+id/imageView2"
+                            android:layout_weight="1"
+                            android:layout_margin="5dp"
+                            android:background="@drawable/round_card"
+                            android:clickable="true" />
+
+                        <inf431.polytechnique.fr.setgame.myImageView
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:id="@+id/imageView3"
+                            android:layout_weight="1"
+                            android:layout_margin="5dp"
+                            android:background="@drawable/round_card"
+                            android:clickable="true" /> -->
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/middleLayout"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <!-- <inf431.polytechnique.fr.setgame.myImageView
+                             android:layout_width="fill_parent"
+                             android:layout_height="fill_parent"
+                             android:id="@+id/imageView4"
+                             android:layout_weight="1"
+                             android:layout_margin="5dp"
+                             android:background="@drawable/round_card"
+                             android:clickable="true" />
+
+                         <inf431.polytechnique.fr.setgame.myImageView
+                             android:layout_width="fill_parent"
+                             android:layout_height="fill_parent"
+                             android:id="@+id/imageView5"
+                             android:layout_weight="1"
+                             android:layout_margin="5dp"
+                             android:background="@drawable/round_card"
+                             android:clickable="true" />
+
+                         <inf431.polytechnique.fr.setgame.myImageView
+                             android:layout_width="fill_parent"
+                             android:layout_height="fill_parent"
+                             android:id="@+id/imageView6"
+                             android:layout_weight="1"
+                             android:layout_margin="5dp"
+                             android:background="@drawable/round_card"
+                             android:clickable="true" />-->
+                     </LinearLayout>
+
+                     <LinearLayout
+                         android:id="@+id/bottomLayout"
+                         android:layout_width="fill_parent"
+                         android:layout_height="fill_parent"
+                         android:layout_gravity="center_horizontal"
+                         android:layout_weight="1"
+                         android:orientation="horizontal">
+
+                         <!--<inf431.polytechnique.fr.setgame.myImageView
+                             android:layout_width="fill_parent"
+                             android:layout_height="fill_parent"
+                             android:id="@+id/imageView7"
+                             android:layout_weight="1"
+                             android:layout_margin="5dp"
+                             android:background="@drawable/round_card"
+                             android:clickable="true" />
+
+                         <inf431.polytechnique.fr.setgame.myImageView
+                             android:layout_width="fill_parent"
+                             android:layout_height="fill_parent"
+                             android:id="@+id/imageView8"
+                             android:layout_weight="1"
+                             android:layout_margin="5dp"
+                             android:background="@drawable/round_card"
+                             android:clickable="true" />
+
+                         <inf431.polytechnique.fr.setgame.myImageView
+                             android:layout_width="fill_parent"
+                             android:layout_height="fill_parent"
+                             android:id="@+id/imageView9"
+                             android:layout_weight="1"
+                             android:layout_margin="5dp"
+                             android:background="@drawable/round_card"
+                             android:clickable="true" />-->
+                     </LinearLayout>
+
+                     <LinearLayout
+                         android:layout_width="match_parent"
+                         android:layout_height="wrap_content"
+                         android:layout_gravity="center"
+                         android:layout_weight="0"
+                         android:orientation="horizontal">
+
+                         <TextView
+                             android:id="@+id/textView"
+                             android:layout_width="fill_parent"
+                             android:layout_height="wrap_content"
+                             android:layout_gravity="center"
+                             android:gravity="center"
+                             android:paddingBottom="5dp"
+                             android:paddingTop="5dp"
+                             android:text="@string/score" />
+                     </LinearLayout>
+
+                 </LinearLayout>
+             </FrameLayout>
