@@ -8,6 +8,6 @@
     <string name="title_activity_single_player">Single player</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
-    <string name="score">Score :</string>
+    <string name="score">Cards Left :</string>
 
 </resources>

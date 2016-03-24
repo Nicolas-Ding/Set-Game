@@ -6,11 +6,13 @@ import android.os.Handler;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.text.format.DateFormat;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +36,20 @@ public class SinglePlayerActivity extends AppCompatActivity {
     private static final int UI_ANIMATION_DELAY = 300;
     private final Handler mHideHandler = new Handler();
     /**
+     * Touch listener to use for in-layout UI controls to delay hiding the
+     * system UI. This is to prevent the jarring behavior of controls going away
+     * while interacting with activity UI.
+     */
+    private final View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            if (AUTO_HIDE) {
+                delayedHide(AUTO_HIDE_DELAY_MILLIS);
+            }
+            return false;
+        }
+    };
+    /**
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
      */
@@ -42,6 +58,10 @@ public class SinglePlayerActivity extends AppCompatActivity {
     private LinearLayout topLayout;
     private LinearLayout middleLayout;
     private LinearLayout bottomLayout;
+    private TextView cardsLeftTextView;
+    private TextView timeTextView;
+    private long startTime;
+    private Counter idCounter = new Counter(0);
     private View mContentView;
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
@@ -78,20 +98,6 @@ public class SinglePlayerActivity extends AppCompatActivity {
         @Override
         public void run() {
             hide();
-        }
-    };
-    /**
-     * Touch listener to use for in-layout UI controls to delay hiding the
-     * system UI. This is to prevent the jarring behavior of controls going away
-     * while interacting with activity UI.
-     */
-    private final View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener() {
-        @Override
-        public boolean onTouch(View view, MotionEvent motionEvent) {
-            if (AUTO_HIDE) {
-                delayedHide(AUTO_HIDE_DELAY_MILLIS);
-            }
-            return false;
         }
     };
 
@@ -139,9 +145,11 @@ public class SinglePlayerActivity extends AppCompatActivity {
         Thread initializeCards = new Thread(new CardMixer(CardList,false));
         initializeCards.start();
 
-        LinearLayout topLayout = (LinearLayout) findViewById(R.id.topLayout);
-        LinearLayout middleLayout = (LinearLayout) findViewById(R.id.middleLayout);
-        LinearLayout bottomLayout = (LinearLayout) findViewById(R.id.bottomLayout);
+        topLayout = (LinearLayout) findViewById(R.id.topLayout);
+        middleLayout = (LinearLayout) findViewById(R.id.middleLayout);
+        bottomLayout = (LinearLayout) findViewById(R.id.bottomLayout);
+        cardsLeftTextView = (TextView) findViewById(R.id.cardsLeftTextView);
+        timeTextView = (TextView) findViewById(R.id.timeTextView);
 
 
         int i;
@@ -149,7 +157,8 @@ public class SinglePlayerActivity extends AppCompatActivity {
         for (i = 0; i < 3; i++)
         {
             myImageView newView  = new myImageView(getBaseContext());
-            newView.setId(i);
+            newView.setId(idCounter.get());
+            idCounter.increment();
             topLayout.addView(newView);
             newView.setLayoutNumber(1);
             imageViews.add(newView);
@@ -157,7 +166,8 @@ public class SinglePlayerActivity extends AppCompatActivity {
         for (i = 0; i < 3; i++)
         {
             myImageView newView  = new myImageView(getBaseContext());
-            newView.setId(i+3);
+            newView.setId(idCounter.get());
+            idCounter.increment();
             middleLayout.addView(newView);
             newView.setLayoutNumber(2);
             imageViews.add(newView);
@@ -165,7 +175,8 @@ public class SinglePlayerActivity extends AppCompatActivity {
         for (i = 0; i < 3; i++)
         {
             myImageView newView  = new myImageView(getBaseContext());
-            newView.setId(i+6);
+            newView.setId(idCounter.get());
+            idCounter.increment();
             bottomLayout.addView(newView);
             newView.setLayoutNumber(3);
             imageViews.add(newView);
@@ -181,14 +192,44 @@ public class SinglePlayerActivity extends AppCompatActivity {
             configureImageView(view);
         }
 
-        removeCard(imageViews.get(4));
+        completeCards();
+        updateCardsLeftTextView();
 
+
+        Thread t = new Thread() {
+
+            @Override
+            public void run() {
+                try {
+                    while (!isInterrupted()) {
+                        Thread.sleep(1000);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                updateTextView();
+                            }
+                        });
+                    }
+                } catch (InterruptedException e) {
+                }
+            }
+        };
+
+        t.start();
+        startTime = System.currentTimeMillis();
+
+    }
+
+    private void updateTextView()
+    {
+        long currentTime = System.currentTimeMillis();
+        String time = "mm:ss";
+        timeTextView.setText(DateFormat.format(time, currentTime-startTime));
     }
 
     private void removeCard(myImageView v)
     {
         imageViews.remove(v);
-        System.out.println("iii");
         switch (v.getLayoutNumber())
         {
             case 1:
@@ -198,7 +239,6 @@ public class SinglePlayerActivity extends AppCompatActivity {
             case 2:
                 middleLayout.removeView(v);
                 middleLayout.invalidate();
-                System.out.println("u");
                 break;
             case 3:
                 bottomLayout.removeView(v);
@@ -208,14 +248,29 @@ public class SinglePlayerActivity extends AppCompatActivity {
 
     }
 
-    private void addNewCard(LinearLayout layout, int layoutNumber)
+    private void addNewCard(int layoutNumber)
     {
-        myImageView newView  = new myImageView(getBaseContext());
-        layout.addView(newView);
-        imageViews.add(newView);
-        newView.setLayoutNumber(layoutNumber);
+
         if (!CardList.isEmpty())
         {
+            myImageView newView  = new myImageView(getBaseContext());
+            switch(layoutNumber)
+            {
+                case 1:
+                    topLayout.addView(newView);
+                    break;
+                case 2:
+                    middleLayout.addView(newView);
+                    break;
+                case 3:
+                    bottomLayout.addView(newView);
+                    break;
+            }
+
+            imageViews.add(newView);
+            newView.setLayoutNumber(layoutNumber);
+            newView.setId(idCounter.get());
+            idCounter.increment();
             int currentCard = CardList.pop();
             setImageView(newView.getId(), currentCard);
             newView.setCard(currentCard);
@@ -225,9 +280,56 @@ public class SinglePlayerActivity extends AppCompatActivity {
 
     private void addThreeCards()
     {
-        addNewCard(topLayout,1);
-        addNewCard(middleLayout,2);
-        addNewCard(bottomLayout,3);
+        int a = topLayout.getChildCount();
+        int b = middleLayout.getChildCount();
+        int c = bottomLayout.getChildCount();
+
+        int cardsByLine = (a+b+c+3)/3; //assuming it is an integer
+
+        for (int i = a; i < cardsByLine; i++)
+            addNewCard(1);
+        for (int i = b; i < cardsByLine; i++)
+            addNewCard(2);
+        for (int i = c; i < cardsByLine; i++)
+            addNewCard(3);
+
+        updateCardsLeftTextView();
+    }
+
+    private void updateCardsLeftTextView()
+    {
+        cardsLeftTextView.setText("Cards left : " + Integer.toString(CardList.size()));
+
+    }
+
+    private void completeCards()
+    {
+        runOnUiThread (new Thread(new Runnable()
+        {
+            @Override
+            public void run() {
+                boolean res = false;
+                int tabCards[] = new int[imageViews.size()];
+                int index = 0;
+                for (myImageView i : imageViews)
+                {
+                    tabCards[index] = i.getCard();
+                    index++;
+                }
+                for(int i = 0; i<tabCards.length - 2; i++){
+                    for(int j = i+1; j<tabCards.length -1; j++){
+                        for(int k=j+1; k<tabCards.length; k++){
+                            res = (Cards.isSet(tabCards[i],tabCards[j],tabCards[k])||res);
+                        }
+                    }
+                }
+                if(!res){
+                    addThreeCards();
+                    completeCards();
+                }
+
+            }
+        }));
     }
 
 
@@ -291,17 +393,9 @@ public class SinglePlayerActivity extends AppCompatActivity {
 
                                 for (int i = 0; i < 3; i++)
                                 {
-                                    if (!CardList.isEmpty())
-                                    {
-                                        int currentCard = CardList.pop();
-                                        setImageView(currentSet[i].getId(), currentCard);
-                                        currentSet[i].setCard(currentCard);
-                                    } else
-                                    {
-                                        setImageView(currentSet[i].getId(), 0);
-                                        currentSet[i].setCard(0);
-                                    }
+                                    removeCard(currentSet[i]);
                                 }
+                                completeCards();
                             }
                             for (int i = 0; i < 3; i++)
                             {

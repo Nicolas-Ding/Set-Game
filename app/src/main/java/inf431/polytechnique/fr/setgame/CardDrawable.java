@@ -125,6 +125,10 @@ class CardDrawable extends Drawable {
         }
     }
 
+    protected void onDraw(Canvas canvas) {
+
+        this.draw(canvas);
+    }
     /**
      * Draws a single shape with the specified filling.
      * @param canvas the canvas on which to draw
@@ -198,8 +202,10 @@ class CardDrawable extends Drawable {
         p.lineTo(r.centerX(), r.top);
         p.lineTo(r.right, r.centerY());
         p.lineTo(r.centerX(), r.bottom);
-        p.lineTo(r.left, r.centerY());
+        //p.lineTo(r.left, r.centerY());
+        p.close();
         canvas.drawPath(p, paint);
+        p.reset();
     }
 
     @Override

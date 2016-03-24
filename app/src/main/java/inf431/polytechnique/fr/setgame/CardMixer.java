@@ -29,7 +29,7 @@ public class CardMixer implements Runnable {
         }
         int[] cardsTab = new int[this.cardsStack.size()];
         int i = 0;
-        while(! this.cardsStack.isEmpty()){
+        while(!this.cardsStack.isEmpty()){
             cardsTab[i] = this.cardsStack.pop();
             i++;
         }
@@ -37,7 +37,7 @@ public class CardMixer implements Runnable {
             int j = (int)(Math.random()*(k+1));
             swap(cardsTab, k ,j);
         }
-        for(int k = 1; k<cardsTab.length;k++){
+        for(int k = 0; k<cardsTab.length;k++){
             this.cardsStack.push(cardsTab[k]);
         }
 
