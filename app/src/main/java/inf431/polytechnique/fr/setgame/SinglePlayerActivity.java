@@ -1,6 +1,7 @@
 package inf431.polytechnique.fr.setgame;
 
 import android.annotation.SuppressLint;
+import android.app.DialogFragment;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.NavUtils;
@@ -35,20 +36,6 @@ public class SinglePlayerActivity extends AppCompatActivity {
      */
     private static final int UI_ANIMATION_DELAY = 300;
     private final Handler mHideHandler = new Handler();
-    /**
-     * Touch listener to use for in-layout UI controls to delay hiding the
-     * system UI. This is to prevent the jarring behavior of controls going away
-     * while interacting with activity UI.
-     */
-    private final View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener() {
-        @Override
-        public boolean onTouch(View view, MotionEvent motionEvent) {
-            if (AUTO_HIDE) {
-                delayedHide(AUTO_HIDE_DELAY_MILLIS);
-            }
-            return false;
-        }
-    };
     /**
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
@@ -98,6 +85,20 @@ public class SinglePlayerActivity extends AppCompatActivity {
         @Override
         public void run() {
             hide();
+        }
+    };
+    /**
+     * Touch listener to use for in-layout UI controls to delay hiding the
+     * system UI. This is to prevent the jarring behavior of controls going away
+     * while interacting with activity UI.
+     */
+    private final View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            if (AUTO_HIDE) {
+                delayedHide(AUTO_HIDE_DELAY_MILLIS);
+            }
+            return false;
         }
     };
 
@@ -324,8 +325,16 @@ public class SinglePlayerActivity extends AppCompatActivity {
                     }
                 }
                 if(!res){
-                    addThreeCards();
-                    completeCards();
+                    if (!CardList.isEmpty())
+                    {
+                        addThreeCards();
+                        completeCards();
+                    }
+                    else
+                    {
+                        DialogFragment d = FinishDialog.newInstance(System.currentTimeMillis()-startTime);
+                        d.show(getFragmentManager(), "Congratulations !");
+                    }
                 }
 
             }
